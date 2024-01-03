@@ -75,10 +75,18 @@ class App:
     def run_query(self):
         question = self.question_entry.get()
         cypher_query = get_cypher_query(question)
+        print(cypher_query)
         if cypher_query:
             try:
                 results = self.conn.query(cypher_query)
-                values = [str(record) for record in results]
+                values = []
+                for record in results:
+                    _str = str(record)
+                    parts = _str.split("=")
+                    result = parts[1].strip(">")
+                    values.append(result)
+
+
                 display_text = "\n".join(values)
                 self.result_label.config(text=display_text)
             except Exception as e:
