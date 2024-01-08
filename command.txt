@@ -1,0 +1,40 @@
+#Sparql
+SELECT ?songLabel ?releaseDate ?artistLabel ?birthYear ?composerLabel ?genreLabel WHERE {
+  ?song wdt:P31 wd:Q7366;
+        wdt:P175 ?artist;
+        wdt:P577 ?date;
+        wdt:P86 ?composer;
+        wdt:P136 ?genre. # Thể loại
+
+  ?artist wdt:P569 ?birthDate;
+  
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+  
+  BIND(YEAR(?date) AS ?releaseDate)
+  BIND(YEAR(?birthDate) AS ?birthYear)
+  ?artist rdfs:label ?artistLabel.
+  ?composer rdfs:label ?composerLabel.
+  ?genre rdfs:label ?genreLabel.
+
+
+  
+  FILTER(LANG(?artistLabel) = "en")
+  FILTER(LANG(?composerLabel) = "en")
+  FILTER(LANG(?genreLabel) = "en")
+
+
+}
+LIMIT 100
+
+#CREATE GRAPH DATABASE
+
+LOAD CSV WITH HEADERS FROM 'file:///music2.csv' AS row
+MERGE (artist:Artist {name: row.artistLabel, birthYear: toInteger(row.birthYear)})
+MERGE (song:Song {
+  title: row.songLabel,
+  releaseDate: row.releaseDate,
+  genre: row.genreLabel
+})
+MERGE (composer:Composer {name: row.composerLabel})
+MERGE (artist)-[:PERFORMED]->(song)
+MERGE (composer)-[:COMPOSED]->(song)
