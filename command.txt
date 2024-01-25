@@ -4,7 +4,7 @@ SELECT ?songLabel ?releaseDate ?artistLabel ?birthYear ?composerLabel ?genreLabe
         wdt:P175 ?artist;
         wdt:P577 ?date;
         wdt:P86 ?composer;
-        wdt:P136 ?genre. # Thể loại
+        wdt:P136 ?genre.
 
   ?artist wdt:P569 ?birthDate;
   
@@ -38,3 +38,13 @@ MERGE (song:Song {
 MERGE (composer:Composer {name: row.composerLabel})
 MERGE (artist)-[:PERFORMED]->(song)
 MERGE (composer)-[:COMPOSED]->(song)
+
+#question
+Name all the song performed in the year 1980
+Who performed Candy?
+The genre of song California Gurls?
+Who is the composer of Te Amo ?
+Who perform the most ?
+How many song Snoop Dogg perform ?
+All the song title with the genre pop music
+The song Candy was composed in which year  
